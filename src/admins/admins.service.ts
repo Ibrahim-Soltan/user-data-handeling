@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin, AdminDocument } from './schemas/admin.schema';
@@ -12,6 +12,10 @@ export class AdminsService {
   ) {}
 
   async create(createAdminDto: CreateAdminDto): Promise<Admin> {
+    const existingAdmin = await this.findOne(createAdminDto.username);
+    if (existingAdmin) {
+      throw new ConflictException('Username is already taken');
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(
       createAdminDto.password,
