@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   # Node.js with NestJS app
   app:
-    image: node:latest # Using the latest node image
+    image: oven/bun:latest # Using the latest bun image
     container_name: nestjs-app
     build:
       context: . # Build the image from the current directory
@@ -13,7 +11,7 @@ services:
     depends_on:
       - mongodb # Wait for MongoDB to be ready before starting the app
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/mydb # MongoDB URI for connection
+      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/mydb?authSource=admin # MongoDB URI for connection
     networks:
       - my-network
 

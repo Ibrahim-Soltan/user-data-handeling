@@ -1,14 +1,14 @@
-# Use the latest node image
-FROM node:latest
+# Use the latest bun image
+FROM oven/bun:latest
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json first (for efficient caching)
-COPY package*.json ./
+# Copy package.json and bun.lock first (for efficient caching)
+COPY package.json bun.lock ./
 
 # Install dependencies
-RUN npm install
+RUN bun install
 
 # Copy the entire application code to the container
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Run the NestJS app (in development mode)
-CMD ["npm", "run", "start:dev"]
+CMD ["bun", "run", "start:dev"]
