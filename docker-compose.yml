@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Node.js with NestJS app
+  app:
+    image: node:latest # Using the latest node image
+    container_name: nestjs-app
+    build:
+      context: . # Build the image from the current directory
+      dockerfile: Dockerfile # Specify the Dockerfile for the app
+    ports:
+      - 3000:3000 # Expose and bind port 3000
+    depends_on:
+      - mongodb # Wait for MongoDB to be ready before starting the app
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/mydb # MongoDB URI for connection
+    networks:
+      - my-network
+
+  # MongoDB container
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - 27017:27017 # Expose MongoDB port
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword
+      - MONGO_INITDB_DATABASE=mydb # The database name to use
+    volumes:
+      - mongodb-data:/data/db # Persist MongoDB data
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+    driver: local
